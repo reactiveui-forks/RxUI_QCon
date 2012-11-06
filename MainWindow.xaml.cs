@@ -12,17 +12,31 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ReactiveUI;
 
 namespace RxUI_QCon
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IViewFor<MainWindowViewModel>
     {
         public MainWindow()
         {
+            ViewModel = new MainWindowViewModel();
             InitializeComponent();
+        }
+
+        public MainWindowViewModel ViewModel {
+            get { return (MainWindowViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(MainWindowViewModel), typeof(MainWindow), new PropertyMetadata(null));
+
+        object IViewFor.ViewModel {
+            get { return ViewModel; }
+            set { ViewModel = (MainWindowViewModel)value; }
         }
     }
 }
