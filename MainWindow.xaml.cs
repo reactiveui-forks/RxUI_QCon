@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,6 +34,9 @@ namespace RxUI_QCon
 
             this.OneWayBind(ViewModel, x => x.FinalColor, x => x.FinalColor.Background);
             this.BindCommand(ViewModel, x => x.Ok);
+
+            this.WhenAny(x => x.ViewModel.Ok, x => x.Value).Merge()
+                .Subscribe(_ => MessageBox.Show("It worked!"));
         }
 
         public MainWindowViewModel ViewModel {
