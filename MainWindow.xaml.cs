@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ReactiveUI;
+using ReactiveUI.Xaml;
 
 namespace RxUI_QCon
 {
@@ -25,6 +26,13 @@ namespace RxUI_QCon
         {
             ViewModel = new MainWindowViewModel();
             InitializeComponent();
+
+            this.Bind(ViewModel, x => x.Red);
+            this.Bind(ViewModel, x => x.Green);
+            this.Bind(ViewModel, x => x.Blue);
+
+            this.OneWayBind(ViewModel, x => x.FinalColor, x => x.FinalColor.Background);
+            this.BindCommand(ViewModel, x => x.Ok);
         }
 
         public MainWindowViewModel ViewModel {
