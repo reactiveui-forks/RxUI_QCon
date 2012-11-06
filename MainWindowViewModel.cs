@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -35,5 +36,19 @@ namespace RxUI_QCon
         }
 
         public ReactiveCommand Ok { get; protected set; }
+
+        public MainWindowViewModel()
+        {
+            this.WhenAny(x => x.Red, x => x.Green, x => x.Blue,
+                    (r, g, b) => new {Red = Int32.Parse(r.Value), Green = Int32.Parse(g.Value), Blue = Int32.Parse(b.Value)})
+                .Where(x => inColorRange(x.Red) && inColorRange(x.Green) && inColorRange(x.Blue))
+                .Select(x => new SolidColorBrush(Color.FromRgb((byte)x.Red, (byte)x.Green, (byte)x.Blue)))
+                .ToProperty(this, x => x.FinalColor);
+        }
+
+        bool inColorRange(int colorValue)
+        {
+            return (colorValue >= 0 && colorValue <= 255);
+        }
     }
 }
