@@ -37,6 +37,8 @@ namespace RxUI_QCon
 
             this.WhenAny(x => x.ViewModel.Ok, x => x.Value).Merge()
                 .Subscribe(_ => MessageBox.Show("It worked!"));
+
+            this.OneWayBind(ViewModel, x => x.Images);
         }
 
         public MainWindowViewModel ViewModel {
