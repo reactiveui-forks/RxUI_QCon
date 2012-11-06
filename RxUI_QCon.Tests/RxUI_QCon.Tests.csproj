@@ -45,6 +45,10 @@
     <Reference Include="ReactiveUI.Testing">
       <HintPath>..\RxUI_QCon\packages\reactiveui-testing.4.0.2\lib\net45\ReactiveUI.Testing.dll</HintPath>
     </Reference>
+    <Reference Include="ReactiveUI.Xaml, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\reactiveui-xaml.4.0.2\lib\net45\ReactiveUI.Xaml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Reactive.Core, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
       <HintPath>..\RxUI_QCon\packages\Rx-Core.2.0.21103\lib\Net45\System.Reactive.Core.dll</HintPath>

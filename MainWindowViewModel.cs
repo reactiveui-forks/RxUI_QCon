@@ -39,16 +39,26 @@ namespace RxUI_QCon
 
         public MainWindowViewModel()
         {
-            this.WhenAny(x => x.Red, x => x.Green, x => x.Blue,
-                    (r, g, b) => new {Red = Int32.Parse(r.Value), Green = Int32.Parse(g.Value), Blue = Int32.Parse(b.Value)})
-                .Where(x => inColorRange(x.Red) && inColorRange(x.Green) && inColorRange(x.Blue))
-                .Select(x => new SolidColorBrush(Color.FromRgb((byte)x.Red, (byte)x.Green, (byte)x.Blue)))
+            var whenAnyColorChanges = this.WhenAny(x => x.Red, x => x.Green, x => x.Blue,
+                    (r, g, b) => Tuple.Create(r.Value, g.Value, b.Value))
+                .Select(stringsToColor);
+
+            whenAnyColorChanges
+                .Where(x => x != null)
+                .Select(x => new SolidColorBrush(x.Value))
                 .ToProperty(this, x => x.FinalColor);
+
+            Ok = new ReactiveCommand(whenAnyColorChanges.Select(x => x != null));
         }
 
-        bool inColorRange(int colorValue)
+        Color? stringsToColor(Tuple<string, string, string> colorsAsStrings)
         {
-            return (colorValue >= 0 && colorValue <= 255);
+            byte r, g, b;
+            if (!byte.TryParse(colorsAsStrings.Item1, out r) || !byte.TryParse(colorsAsStrings.Item2, out g) || !byte.TryParse(colorsAsStrings.Item3, out b)) {
+                return null;
+            }
+
+            return Color.FromRgb(r, g, b);
         }
     }
 }
