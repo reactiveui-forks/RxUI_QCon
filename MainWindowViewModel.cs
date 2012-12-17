@@ -18,20 +18,20 @@ namespace RxUI_QCon
 {
     public class MainWindowViewModel : ReactiveObject
     {
-        string _Red = "0";
-        public string Red {
+        int _Red;
+        public int Red {
             get { return _Red; }
             set { this.RaiseAndSetIfChanged(x => x.Red, value); }
         }
 
-        string _Green = "0";
-        public string Green {
+        int _Green;
+        public int Green {
             get { return _Green; }
             set { this.RaiseAndSetIfChanged(x => x.Green, value); }
         }
 
-        string _Blue = "0";
-        public string Blue {
+        int _Blue;
+        public int Blue {
             get { return _Blue; }
             set { this.RaiseAndSetIfChanged(x => x.Blue, value); }
         }
@@ -52,7 +52,7 @@ namespace RxUI_QCon
         {
             var whenAnyColorChanges = this.WhenAny(x => x.Red, x => x.Green, x => x.Blue,
                     (r, g, b) => Tuple.Create(r.Value, g.Value, b.Value))
-                .Select(stringsToColor);
+                .Select(intsToColor);
 
             whenAnyColorChanges
                 .Where(x => x != null)
@@ -70,14 +70,21 @@ namespace RxUI_QCon
                 .ToProperty(this, x => x.Images);
         }
 
-        Color? stringsToColor(Tuple<string, string, string> colorsAsStrings)
+        Color? intsToColor(Tuple<int, int, int> colorsAsInts)
         {
-            byte r, g, b;
-            if (!byte.TryParse(colorsAsStrings.Item1, out r) || !byte.TryParse(colorsAsStrings.Item2, out g) || !byte.TryParse(colorsAsStrings.Item3, out b)) {
+            byte? r = inRange(colorsAsInts.Item1), g = inRange(colorsAsInts.Item2), b = inRange(colorsAsInts.Item3);
+
+            if (r == null || g == null || b == null) return null;
+            return Color.FromRgb(r.Value, g.Value, b.Value);
+        }
+
+        static byte? inRange(int value)
+        {
+            if (value < 0 || value > 255) {
                 return null;
             }
 
-            return Color.FromRgb(r, g, b);
+            return (byte) value;
         }
 
         IObservable<ImageList> imagesForColor(Color sourceColor)

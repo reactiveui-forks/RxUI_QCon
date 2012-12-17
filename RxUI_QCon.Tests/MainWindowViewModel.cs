@@ -10,19 +10,19 @@ namespace RxUI_QCon.Tests
         {
             var fixture = new MainWindowViewModel();
 
-            fixture.Red = "255";
+            fixture.Red = 255;
 
             Assert.NotNull(fixture.FinalColor);
             Assert.Equal(255, fixture.FinalColor.Color.R);
             Assert.Equal(0, fixture.FinalColor.Color.B);
 
-            fixture.Blue = "300";
+            fixture.Blue = 300;
 
             Assert.NotNull(fixture.FinalColor);
             Assert.Equal(255, fixture.FinalColor.Color.R);
             Assert.Equal(0, fixture.FinalColor.Color.B);
 
-            fixture.Blue = "128";
+            fixture.Blue = 128;
 
             Assert.NotNull(fixture.FinalColor);
             Assert.Equal(255, fixture.FinalColor.Color.R);
@@ -32,14 +32,14 @@ namespace RxUI_QCon.Tests
         [Fact]
         public void CantHitOkWhenValuesAreBogus()
         {
-            var fixture = new MainWindowViewModel() {Red = "0", Blue = "0", Green = "0",};
+            var fixture = new MainWindowViewModel() {Red = 0, Blue = 0, Green = 0,};
 
             Assert.True(fixture.Ok.CanExecute(null));
 
-            fixture.Red = "-4";
+            fixture.Red = -4;
             Assert.False(fixture.Ok.CanExecute(null));
 
-            fixture.Red = "128";
+            fixture.Red = 128;
             Assert.True(fixture.Ok.CanExecute(null));
         }
     }
