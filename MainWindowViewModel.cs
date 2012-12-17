@@ -21,19 +21,19 @@ namespace RxUI_QCon
         int _Red;
         public int Red {
             get { return _Red; }
-            set { this.RaiseAndSetIfChanged(x => x.Red, value); }
+            set { this.RaiseAndSetIfChanged(value); }
         }
 
         int _Green;
         public int Green {
             get { return _Green; }
-            set { this.RaiseAndSetIfChanged(x => x.Green, value); }
+            set { this.RaiseAndSetIfChanged(value); }
         }
 
         int _Blue;
         public int Blue {
             get { return _Blue; }
-            set { this.RaiseAndSetIfChanged(x => x.Blue, value); }
+            set { this.RaiseAndSetIfChanged(value); }
         }
 
         ObservableAsPropertyHelper<SolidColorBrush> _FinalColor;
