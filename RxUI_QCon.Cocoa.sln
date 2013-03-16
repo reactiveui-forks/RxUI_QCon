@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxUI_QCon.Cocoa", "RxUI_QCon.Cocoa\RxUI_QCon.Cocoa.csproj", "{73FC4782-9B21-4669-B466-2D730D0D254C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		AppStore|x86 = AppStore|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.AppStore|x86.ActiveCfg = AppStore|x86
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.AppStore|x86.Build.0 = AppStore|x86
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.Debug|x86.ActiveCfg = Debug|x86
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.Debug|x86.Build.0 = Debug|x86
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.Release|x86.ActiveCfg = Release|x86
+		{73FC4782-9B21-4669-B466-2D730D0D254C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = RxUI_QCon.Cocoa\RxUI_QCon.Cocoa.csproj
+	EndGlobalSection
+EndGlobal
