@@ -64,6 +64,9 @@ namespace RxUI_QCon.Cocoa
                 .Where(x => x != null)
                 .Select(x => x.Cast<NSObject>().ToArray())
                 .BindTo(this, x => x.collectionView.Content);
+
+            this.OneWayBind(ViewModel, x => x.IsBusy, x => x.progressIndicator.Hidden, x => !x);
+            progressIndicator.StartAnimation(this);
         }
 
         // NB: This design is terrible and leaks memory like a sieve. For example

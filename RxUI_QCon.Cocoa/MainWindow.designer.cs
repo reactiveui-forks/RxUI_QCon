@@ -28,6 +28,9 @@ namespace RxUI_QCon.Cocoa
 
 		[Outlet]
 		MonoMac.AppKit.NSCollectionView collectionView { get; set; }
+
+		[Outlet]
+		MonoMac.AppKit.NSProgressIndicator progressIndicator { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -59,6 +62,11 @@ namespace RxUI_QCon.Cocoa
 			if (collectionView != null) {
 				collectionView.Dispose ();
 				collectionView = null;
+			}
+
+			if (progressIndicator != null) {
+				progressIndicator.Dispose ();
+				progressIndicator = null;
 			}
 		}
 	}
