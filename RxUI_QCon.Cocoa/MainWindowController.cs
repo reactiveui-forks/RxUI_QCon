@@ -1,16 +1,23 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
+using MonoMac.CoreAnimation;
+using ReactiveUI;
+using ReactiveUI.Xaml;
+using MonoMac.CoreGraphics;
+using System.Drawing;
+using System.ComponentModel;
+using System.Reactive.Subjects;
 
 namespace RxUI_QCon.Cocoa
 {
-    public partial class MainWindowController : MonoMac.AppKit.NSWindowController
+    public partial class MainWindowController : MonoMac.AppKit.NSWindowController, IViewFor<MainWindowViewModel>, INotifyPropertyChanged
     {
-        #region Constructors
-        
+       
         // Called when created from unmanaged code
         public MainWindowController(IntPtr handle) : base (handle)
         {
@@ -33,18 +40,59 @@ namespace RxUI_QCon.Cocoa
         // Shared initialization code
         void Initialize()
         {
+            ViewModel = new MainWindowViewModel();
         }
-        
-        #endregion
-        
-        //strongly typed window accessor
-        public new MainWindow Window
+
+        public override void AwakeFromNib()
         {
-            get
-            {
-                return (MainWindow)base.Window;
-            }
+            base.AwakeFromNib();
+
+            this.Bind(ViewModel, x => x.Red, x => x.redField.StringValue, hookTextField(redField));
+            this.Bind(ViewModel, x => x.Green, x => x.greenField.StringValue, hookTextField(greenField));
+            this.Bind(ViewModel, x => x.Blue, x => x.blueField.StringValue, hookTextField(blueField));
+
+            // NB: Cocoa is Weird.
+            finalColorView.WantsLayer = true;
+            this.WhenAny(x => x.ViewModel.FinalColor, x => x.Value)
+                .Where(x => x != null)
+                .Select(x => new CALayer() { BackgroundColor = colorToCgColor(x.Value) })
+                .BindTo(this, x => x.finalColorView.Layer);
+
+            this.BindCommand(ViewModel, x => x.Ok, x => x.okButton);
         }
+
+        // NB: This design is terrible and leaks memory like a sieve. For example
+        // purposes only!
+        IObservable<Unit> hookTextField(NSTextField textField)
+        {
+            var ret = new Subject<Unit>();
+            textField.Delegate = new BlockDidChangeTextFieldDelegate(() => ret.OnNext(Unit.Default));
+            return ret;
+        }
+
+        class BlockDidChangeTextFieldDelegate : NSTextFieldDelegate
+        {
+            Action block;
+            public BlockDidChangeTextFieldDelegate(Action block) { this.block = block; }
+            public override void Changed(NSNotification notification) { block(); }
+        }
+
+        CGColor colorToCgColor(Color c)
+        {
+            float r = c.R / 255.0f, g = c.G / 255.0f, b = c.B / 255.0f, a = c.A / 255.0f;
+            return new CGColor(r,g,b,a);
+        }
+
+        public MainWindowViewModel ViewModel { get; set; }
+        object IViewFor.ViewModel {
+            get { return ViewModel; }
+            set { ViewModel = (MainWindowViewModel)value; }
+        }
+
+        public new MainWindow Window {
+            get { return (MainWindow)base.Window; }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
-
