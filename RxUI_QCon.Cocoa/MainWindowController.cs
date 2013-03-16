@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
@@ -17,7 +18,6 @@ namespace RxUI_QCon.Cocoa
 {
     public partial class MainWindowController : MonoMac.AppKit.NSWindowController, IViewFor<MainWindowViewModel>, INotifyPropertyChanged
     {
-       
         // Called when created from unmanaged code
         public MainWindowController(IntPtr handle) : base (handle)
         {
@@ -59,6 +59,11 @@ namespace RxUI_QCon.Cocoa
                 .BindTo(this, x => x.finalColorView.Layer);
 
             this.BindCommand(ViewModel, x => x.Ok, x => x.okButton);
+
+            this.WhenAny(x => x.ViewModel.Images, x => x.Value)
+                .Where(x => x != null)
+                .Select(x => x.Cast<NSObject>().ToArray())
+                .BindTo(this, x => x.collectionView.Content);
         }
 
         // NB: This design is terrible and leaks memory like a sieve. For example
@@ -94,5 +99,40 @@ namespace RxUI_QCon.Cocoa
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    [Register("JustDisplayTheImageCollectionViewItem")]
+    public class JustDisplayTheImageCollectionViewItem : NSCollectionViewItem
+    {
+        // Called when created from unmanaged code
+        public JustDisplayTheImageCollectionViewItem(IntPtr handle) : base (handle)
+        {
+            Initialize();
+        }
+        
+        // Called when created directly from a XIB file
+        [Export ("initWithCoder:")]
+        public JustDisplayTheImageCollectionViewItem(NSCoder coder) : base (coder)
+        {
+            Initialize();
+        }
+        
+        // Call to load from the XIB/NIB file
+        public JustDisplayTheImageCollectionViewItem() : base ()
+        {
+            Initialize();
+        }
+        
+        // Shared initialization code
+        void Initialize()
+        {
+            RxApp.DeferredScheduler.Schedule(() => {
+                if (this.RepresentedObject == null) return;
+                this.View = new NSImageView() { 
+                    Image = (NSImage)this.RepresentedObject,
+                    ImageFrameStyle = NSImageFrameStyle.Photo,
+                };
+            });
+        }
     }
 }

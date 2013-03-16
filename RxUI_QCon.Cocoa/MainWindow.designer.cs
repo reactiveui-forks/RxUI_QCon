@@ -25,6 +25,9 @@ namespace RxUI_QCon.Cocoa
 
 		[Outlet]
 		MonoMac.AppKit.NSButton okButton { get; set; }
+
+		[Outlet]
+		MonoMac.AppKit.NSCollectionView collectionView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -51,6 +54,11 @@ namespace RxUI_QCon.Cocoa
 			if (okButton != null) {
 				okButton.Dispose ();
 				okButton = null;
+			}
+
+			if (collectionView != null) {
+				collectionView.Dispose ();
+				collectionView = null;
 			}
 		}
 	}
