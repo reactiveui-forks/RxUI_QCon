@@ -50,6 +50,12 @@ namespace RxUI_QCon
             get { return _FinalColor.Value; }
         }
 
+        bool _IsBusy;
+        public bool IsBusy {
+            get { return _IsBusy; }
+            set { this.RaiseAndSetIfChanged(x => x.IsBusy, value); }
+        }
+
 #if MONO
         ObservableAsPropertyHelper<IList<NSImage>> _Images;
         public IList<NSImage> Images {
@@ -79,6 +85,7 @@ namespace RxUI_QCon
 
             this.WhenAny(x => x.FinalColor, x => x.Value)
                 .Throttle(TimeSpan.FromSeconds(0.7), RxApp.DeferredScheduler)
+                .Do(_ => IsBusy = true)
 #if MONO
                 .Select(x => imagesForColor(x.Value))
 #else
@@ -86,6 +93,7 @@ namespace RxUI_QCon
 #endif
                 .Switch()
                 .SelectMany(imageListToImages)
+                .Do(_ => IsBusy = false)
                 .ToProperty(this, x => x.Images);
         }
 
