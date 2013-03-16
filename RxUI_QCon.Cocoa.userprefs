@@ -1,9 +1,24 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RxUI_QCon.WPF/MainWindowViewModel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RxUI_QCon.Cocoa/MainWindowController.cs">
     <Files>
-      <File FileName="RxUI_QCon.WPF/MainWindowViewModel.cs" Line="22" Column="1" />
+      <File FileName="RxUI_QCon.WPF/MainWindowViewModel.cs" Line="83" Column="1" />
+      <File FileName="RxUI_QCon.Cocoa/MainWindowController.cs" Line="67" Column="1" />
+      <File FileName="RxUI_QCon.Cocoa/MainWindow.cs" Line="1" Column="1" />
+      <File FileName="RxUI_QCon.Cocoa/AppDelegate.cs" Line="1" Column="1" />
+      <File FileName="RxUI_QCon.Cocoa/Main.cs" Line="1" Column="1" />
+      <File FileName="../rx/Rx/NET/Source/System.Reactive.Core/Reactive/AnonymousSafeObserver.cs" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="RxUI_QCon.Cocoa" expanded="True" selected="True" />
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
