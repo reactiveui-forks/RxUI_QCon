@@ -39,8 +39,9 @@ namespace RxUI_QCon
                 .Subscribe(_ => MessageBox.Show("It worked!"));
 
             this.OneWayBind(ViewModel, x => x.Images, x => x.Images.ItemsSource);
+            this.OneWayBind(ViewModel, x => x.IsBusy, x => x.IsBusy.Visibility, () => false, BooleanToVisibilityHint.Inverse);
         }
-
+        
         public MainWindowViewModel ViewModel {
             get { return (MainWindowViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }

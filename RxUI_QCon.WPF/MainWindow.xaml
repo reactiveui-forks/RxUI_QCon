@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -27,7 +28,9 @@
 
         <Border x:Name="FinalColor" Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" Width="128" Height="128" HorizontalAlignment="Right" BorderBrush="#FF474747" BorderThickness="4" CornerRadius="2" />
 
-        <ListBox x:Name="Images" Grid.Row="3" Grid.ColumnSpan="3">
+        <ProgressBar x:Name="IsBusy" Grid.Row="3" Grid.Column="3" Margin="0,4,0,4" HorizontalAlignment="Right" Width="128" Height="16" IsIndeterminate="True"/>
+
+        <ListBox x:Name="Images" Grid.Row="4" Grid.ColumnSpan="3">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<UniformGrid />
@@ -40,6 +43,6 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-        <Button x:Name="Ok" Grid.Row="4" Grid.Column="2" MinWidth="75" MinHeight="25" Content="Ok" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+        <Button x:Name="Ok" Grid.Row="5" Grid.Column="2" MinWidth="75" MinHeight="25" Content="Ok" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
     </Grid>
 </Window>
