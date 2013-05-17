@@ -95,6 +95,8 @@ namespace RxUI_QCon
                 .SelectMany(imageListToImages)
                 .Do(_ => IsBusy = false)
                 .ToProperty(this, x => x.Images);
+
+            _Images.ThrownExceptions.Subscribe(ex => this.Log().WarnException("Can't load images", ex));
         }
 
         Color? intsToColor(Tuple<int, int, int> colorsAsInts)
