@@ -1,16 +1,8 @@
 ﻿using ReactiveUI;
-using ReactiveUI.Xaml;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RxUI_QCon.WinForms
@@ -19,8 +11,9 @@ namespace RxUI_QCon.WinForms
     {
         public MainWindow()
         {
-            RxApp.Register(typeof(WpfColorToWinformsColor), typeof(IBindingTypeConverter));
-            RxApp.Register(typeof(CommandToWinformsButton), typeof(ICreatesCommandBinding));
+            var resolver = (IMutableDependencyResolver) RxApp.DependencyResolver;
+            resolver.Register(() => new WpfColorToWinformsColor(), typeof(IBindingTypeConverter));
+            resolver.Register(() => new CommandToWinformsButton(), typeof(ICreatesCommandBinding));
 
             InitializeComponent();
             ViewModel = new MainWindowViewModel();
@@ -81,8 +74,7 @@ namespace RxUI_QCon.WinForms
             return 10;
         }
 
-        public IDisposable BindCommandToObject<TEventArgs>(System.Windows.Input.ICommand command, object target, IObservable<object> commandParameter, string eventName) 
-            where TEventArgs : EventArgs
+        public IDisposable BindCommandToObject<TEventArgs>(System.Windows.Input.ICommand command, object target, IObservable<object> commandParameter, string eventName)
         {
             throw new NotImplementedException();
         }
