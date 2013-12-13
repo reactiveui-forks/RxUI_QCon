@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Media;
 using ReactiveUI;
-using ReactiveUI.Xaml;
 using Newtonsoft.Json;
 
 #if MONO
@@ -30,19 +26,19 @@ namespace RxUI_QCon
         int _Red;
         public int Red {
             get { return _Red; }
-            set { this.RaiseAndSetIfChanged(x => x.Red, value); }
+            set { this.RaiseAndSetIfChanged(ref _Red, value); }
         }
 
         int _Green;
         public int Green {
             get { return _Green; }
-            set { this.RaiseAndSetIfChanged(x => x.Green, value); }
+            set { this.RaiseAndSetIfChanged(ref _Green, value); }
         }
 
         int _Blue;
         public int Blue {
             get { return _Blue; }
-            set { this.RaiseAndSetIfChanged(x => x.Blue, value); }
+            set { this.RaiseAndSetIfChanged(ref _Blue, value); }
         }
 
         ObservableAsPropertyHelper<SolidColorBrush> _FinalColor;
@@ -53,7 +49,7 @@ namespace RxUI_QCon
         bool _IsBusy;
         public bool IsBusy {
             get { return _IsBusy; }
-            set { this.RaiseAndSetIfChanged(x => x.IsBusy, value); }
+            set { this.RaiseAndSetIfChanged(ref _IsBusy, value); }
         }
 
 #if MONO
@@ -76,15 +72,15 @@ namespace RxUI_QCon
                     (r, g, b) => Tuple.Create(r.Value, g.Value, b.Value))
                 .Select(intsToColor);
 
-            whenAnyColorChanges
+            _FinalColor = whenAnyColorChanges
                 .Where(x => x != null)
                 .Select(x => new SolidColorBrush(x.Value))
                 .ToProperty(this, x => x.FinalColor);
 
             Ok = new ReactiveCommand(whenAnyColorChanges.Select(x => x != null));
 
-            this.WhenAny(x => x.FinalColor, x => x.Value)
-                .Throttle(TimeSpan.FromSeconds(0.7), RxApp.DeferredScheduler)
+            _Images = this.WhenAny(x => x.FinalColor, x => x.Value)
+                .Throttle(TimeSpan.FromSeconds(0.7), RxApp.MainThreadScheduler)
                 .Do(_ => IsBusy = true)
 #if MONO
                 .Select(x => imagesForColor(x.Value))
@@ -178,7 +174,7 @@ namespace RxUI_QCon
 
         IObservable<IList<BitmapImage>> imageListToImages(ImageList imageList)
         {
-            return imageList.result.ToObservable(RxApp.DeferredScheduler)
+            return imageList.result.ToObservable(RxApp.MainThreadScheduler)
                 .Select(x => "http://img.tineye.com/flickr-images/?filepath=labs-flickr/" + x.filepath)
                 .Select(x => {
                     var ret = new BitmapImage(new Uri(x));
