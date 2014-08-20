@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ReactiveUI;
-using ReactiveUI.Xaml;
 
 namespace RxUI_QCon
 {
