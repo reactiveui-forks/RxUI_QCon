@@ -130,7 +130,7 @@ namespace RxUI_QCon
         IObservable<IList<IBitmap>> imageListToImages(ImageList imageList)
         {
             return imageList.result.ToObservable(RxApp.MainThreadScheduler)
-                .Select(x => "http://img.tineye.com/flickr-images/?filepath=labs-flickr/" + x.filepath)
+                .Select(x => "http://img.tineye.com/flickr-images/?filepath=labs-flickr-public/images/" + x.filepath)
                 .SelectMany(async x => {
                     try {
                         var wc = new WebClient();
