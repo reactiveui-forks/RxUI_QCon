@@ -8,11 +8,11 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 using MonoMac.CoreAnimation;
 using ReactiveUI;
-using ReactiveUI.Xaml;
 using MonoMac.CoreGraphics;
 using System.Drawing;
 using System.ComponentModel;
 using System.Reactive.Subjects;
+using Splat;
 
 namespace RxUI_QCon.Cocoa
 {
@@ -54,8 +54,7 @@ namespace RxUI_QCon.Cocoa
             // NB: Cocoa is Weird.
             finalColorView.WantsLayer = true;
             this.WhenAny(x => x.ViewModel.FinalColor, x => x.Value)
-                .Where(x => x != null)
-                .Select(x => new CALayer() { BackgroundColor = colorToCgColor(x.Value) })
+                .Select(x => new CALayer() { BackgroundColor = colorToCgColor(x) })
                 .BindTo(this, x => x.finalColorView.Layer);
 
             this.BindCommand(ViewModel, x => x.Ok, x => x.okButton);
@@ -129,10 +128,10 @@ namespace RxUI_QCon.Cocoa
         // Shared initialization code
         void Initialize()
         {
-            RxApp.DeferredScheduler.Schedule(() => {
+            RxApp.MainThreadScheduler.Schedule(() => {
                 if (this.RepresentedObject == null) return;
                 this.View = new NSImageView() { 
-                    Image = (NSImage)this.RepresentedObject,
+					Image = ((IBitmap)this.RepresentedObject).ToNative(),
                     ImageFrameStyle = NSImageFrameStyle.Photo,
                 };
             });

@@ -45,17 +45,11 @@ namespace RxUI_QCon
             set { this.RaiseAndSetIfChanged(ref _IsBusy, value); }
         }
 
-#if MONO
-        ObservableAsPropertyHelper<IList<NSImage>> _Images;
-        public IList<NSImage> Images {
-            get { return _Images.Value; }
-        }
-#else
+
         ObservableAsPropertyHelper<IList<IBitmap>> _Images;
         public IList<IBitmap> Images {
             get { return _Images.Value; }
         }
-#endif
 
         public ReactiveCommand<Object> Ok { get; protected set; }
 
