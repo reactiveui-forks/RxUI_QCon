@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ReactiveUI;
+using Splat;
 
 namespace RxUI_QCon
 {
@@ -27,17 +28,23 @@ namespace RxUI_QCon
             ViewModel = new MainWindowViewModel();
             InitializeComponent();
 
-            this.Bind(ViewModel, x => x.Red);
-            this.Bind(ViewModel, x => x.Green);
-            this.Bind(ViewModel, x => x.Blue);
+            this.Bind(ViewModel, x => x.Red, x => x.Red.Text);
+            this.Bind(ViewModel, x => x.Green, x => x.Green.Text);
+            this.Bind(ViewModel, x => x.Blue, x => x.Blue.Text);
 
-            this.OneWayBind(ViewModel, x => x.FinalColor, x => x.FinalColor.Background);
-            this.BindCommand(ViewModel, x => x.Ok);
+            this.WhenAnyValue(x => x.ViewModel.FinalColor)
+                .Select(x => x.ToNativeBrush())
+                .BindTo(this, x => x.FinalColor.Background);
 
-            this.WhenAny(x => x.ViewModel.Ok, x => x.Value).Merge()
+            this.BindCommand(ViewModel, x => x.Ok, x => x.Ok);
+
+            this.WhenAnyObservable(x => x.ViewModel.Ok)
                 .Subscribe(_ => MessageBox.Show("It worked!"));
 
-            this.OneWayBind(ViewModel, x => x.Images, x => x.Images.ItemsSource);
+            this.WhenAnyValue(x => x.ViewModel.Images)
+                .Select(x => x.Where(y => y != null).Select(y => y.ToNative()).ToList())
+                .BindTo(this, x => x.Images.ItemsSource);
+
             this.OneWayBind(ViewModel, x => x.IsBusy, x => x.IsBusy.Visibility, () => false, BooleanToVisibilityHint.Inverse);
         }
         

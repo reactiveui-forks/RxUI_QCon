@@ -78,6 +78,7 @@ namespace RxUI_QCon
                 .Select(x => imagesForColor(x))
                 .Switch()
                 .SelectMany(imageListToImages)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Do(_ => IsBusy = false)
                 .ToProperty(this, x => x.Images);
 
@@ -118,10 +119,11 @@ namespace RxUI_QCon
             query = query.Substring(1);
 
             var wc = new HttpClient();
-            var url = "http://labs.tineye.com/rest/?" + query;
+            var url = "http://labs.tineye.com";
+            var path = "/multicolr/rest/color_search?" + query;
             wc.BaseAddress = new Uri(url);
 
-            return wc.GetStringAsync("").ToObservable()
+            return wc.GetStringAsync(path).ToObservable()
                 .Select(JsonConvert.DeserializeObject<ImageList>);
         }
 
@@ -130,9 +132,15 @@ namespace RxUI_QCon
             return imageList.result.ToObservable(RxApp.MainThreadScheduler)
                 .Select(x => "http://img.tineye.com/flickr-images/?filepath=labs-flickr/" + x.filepath)
                 .SelectMany(async x => {
-                    var wc = new WebClient();
-                    var bytes = await wc.DownloadDataTaskAsync(x);
-                    return await BitmapLoader.Current.Load(new MemoryStream(bytes), null, null);
+                    try {
+                        var wc = new WebClient();
+                        var bytes = await wc.DownloadDataTaskAsync(x);
+
+                        return await BitmapLoader.Current.Load(new MemoryStream(bytes), null, null);
+                    } catch (Exception ex) {
+                        // NB: Many images that Tineye returns are 404
+                        return null; 
+                    }
                 }).ToList();
         }
     }
