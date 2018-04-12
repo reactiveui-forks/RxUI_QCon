@@ -42,6 +42,7 @@ namespace RxUI_QCon
                 .Subscribe(_ => MessageBox.Show("It worked!"));
 
             this.WhenAnyValue(x => x.ViewModel.Images)
+                .Where(x => x != null)
                 .Select(x => x.Where(y => y != null).Select(y => y.ToNative()).ToList())
                 .BindTo(this, x => x.Images.ItemsSource);
 
